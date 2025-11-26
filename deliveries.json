@@ -1,0 +1,70 @@
+{
+  "deliveries": [
+    {
+      "id": 2,
+      "date": "2025年11月26日",
+      "from_branch": "リハビリフィットネス大永寺",
+      "to_branch": "リハビリフィットネス大永寺",
+      "type": "送付状",
+      "status": "received",
+      "created_at": "2025-11-26T02:24:21.776Z",
+      "received_at": "2025-11-26T04:08:00.723Z",
+      "received_by": "乙部"
+    },
+    {
+      "id": 3,
+      "date": "2025年11月26日",
+      "from_branch": "リハビリフィットネス守山",
+      "to_branch": "リハビリフィットネス守山",
+      "type": "送付状",
+      "status": "sent",
+      "created_at": "2025-11-26T02:29:01.456Z",
+      "received_at": null
+    },
+    {
+      "id": 4,
+      "date": "2025年11月26日",
+      "from_branch": "法人本部",
+      "to_branch": "リハビリフィットネス大永寺",
+      "type": "送付状",
+      "status": "sent",
+      "created_at": "2025-11-26T04:07:17.828Z",
+      "received_at": null,
+      "received_by": null
+    }
+  ],
+  "deliveryItems": [
+    {
+      "id": 2,
+      "delivery_id": 2,
+      "item_name": "test",
+      "quantity": 1
+    },
+    {
+      "id": 3,
+      "delivery_id": 2,
+      "item_name": "test1",
+      "quantity": 1
+    },
+    {
+      "id": 4,
+      "delivery_id": 3,
+      "item_name": "テスト！！！",
+      "quantity": 3
+    },
+    {
+      "id": 5,
+      "delivery_id": 4,
+      "item_name": "test",
+      "quantity": 2
+    },
+    {
+      "id": 6,
+      "delivery_id": 4,
+      "item_name": "test2",
+      "quantity": 4
+    }
+  ],
+  "nextDeliveryId": 5,
+  "nextItemId": 7
+}

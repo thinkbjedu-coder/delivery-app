@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社内便 納品書作成</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1>社内便 納品書作成</h1>
+            <p class="subtitle">Internal Delivery Note System</p>
+            <nav class="nav-tabs">
+                <button class="nav-tab active" data-view="create">送付状作成</button>
+                <button class="nav-tab" data-view="history">履歴管理</button>
+            </nav>
+        </header>
+
+        <!-- Create View -->
+        <main class="app-main create-view">
+            <!-- Control Panel -->
+            <section class="control-panel">
+                <div class="form-group">
+                    <label for="from-branch-select">送付元</label>
+                    <select id="from-branch-select">
+                        <option value="" disabled>拠点を選択してください</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="to-branch-select">送付先</label>
+                    <select id="to-branch-select">
+                        <option value="" disabled selected>拠点を選択してください</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>種別</label>
+                    <div class="toggle-group">
+                        <input type="radio" name="note-type" id="type-sent" value="送付状" checked>
+                        <label for="type-sent" class="toggle-label">送付状</label>
+                        <input type="radio" name="note-type" id="type-received" value="受領証">
+                        <label for="type-received" class="toggle-label">受領証</label>
+                    </div>
+                </div>
+
+                <div class="form-group date-group">
+                    <label>作成日</label>
+                    <div id="current-date" class="date-display"></div>
+                </div>
+            </section>
+
+            <!-- Item List -->
+            <section class="item-section">
+                <div class="table-header">
+                    <div class="col-name">品名・内容</div>
+                    <div class="col-qty">数量</div>
+                    <div class="col-action"></div>
+                </div>
+                <div id="item-list" class="item-list"></div>
+                <button id="add-item-btn" class="btn btn-secondary">
+                    <span class="icon">+</span> 行を追加
+                </button>
+            </section>
+
+            <!-- Actions -->
+            <section class="action-section">
+                <button id="save-btn" class="btn btn-primary">記録を保存</button>
+                <button id="print-btn" class="btn btn-secondary-action">印刷する</button>
+            </section>
+        </main>
+
+        <!-- History View -->
+        <main class="app-main history-view" style="display: none;">
+            <!-- Filters -->
+            <section class="filter-section">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="filter-branch">事業所</label>
+                        <select id="filter-branch">
+                            <option value="">全て</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-status">ステータス</label>
+                        <select id="filter-status">
+                            <option value="">全て</option>
+                            <option value="sent">送付済み</option>
+                            <option value="received">受領済み</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-search">品名検索</label>
+                        <input type="text" id="filter-search" placeholder="品名を入力">
+                    </div>
+                    <div class="form-group">
+                        <button id="apply-filter-btn" class="btn btn-primary">検索</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- History Table -->
+            <section class="history-section">
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>送付元</th>
+                                <th>送付先</th>
+                                <th>品目</th>
+                                <th>ステータス</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-tbody"></tbody>
+                    </table>
+                    <div id="no-history" class="no-data" style="display: none;">
+                        <p>記録がありません</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Detail Modal -->
+        <div id="detail-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>送付記録詳細</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body" id="modal-body"></div>
+            </div>
+        </div>
+
+        <!-- Receiver Name Modal -->
+        <div id="receiver-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>受領確認</h2>
+                    <button class="modal-close-receiver">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="receiver-name">受取人名</label>
+                        <input type="text" id="receiver-name" placeholder="受取人の名前を入力してください">
+                    </div>
+                    <div style="margin-top: 1rem; text-align: right;">
+                        <button id="confirm-receive-btn" class="btn btn-primary">受領確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Template -->
+    <div id="print-area" class="print-area">
+        <div class="print-header">
+            <h1 id="print-title">送付状</h1>
+            <div class="print-meta">
+                <p>日付: <span id="print-date"></span></p>
+                <p>宛先: <span id="print-branch"></span> 御中</p>
+            </div>
+        </div>
+
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>品名・内容</th>
+                    <th>数量</th>
+                    <th>確認</th>
+                </tr>
+            </thead>
+            <tbody id="print-items-body"></tbody>
+        </table>
+
+        <div class="print-footer">
+            <div class="signature-box">
+                <p>担当者印</p>
+                <div class="box"></div>
+            </div>
+            <div class="signature-box">
+                <p>受領印</p>
+                <div class="box"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
