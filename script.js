@@ -1,4 +1,7 @@
-const API_BASE = 'http://localhost:3000/api';
+// 環境に応じてAPI_BASEを自動設定
+const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? `http://${window.location.hostname}:${window.location.port || 3000}/api`
+    : `${window.location.origin}/api`;
 
 let currentReceiveId = null; // 受領確認中のID
 

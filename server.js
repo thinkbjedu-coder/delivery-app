@@ -124,11 +124,22 @@ app.delete('/api/deliveries/:id', (req, res) => {
     }
 });
 
-// サーバー起動 (ローカル環境のみ)
-if (process.env.NODE_ENV !== 'production') {
+// サーバー起動 (Vercel以外の環境)
+if (!process.env.VERCEL) {
     app.listen(PORT, '0.0.0.0', () => {
         console.log(`サーバーが起動しました: http://localhost:${PORT}`);
-        console.log(`ネットワークからアクセス: http://192.168.40.21:${PORT}`);
+        const networkInterfaces = require('os').networkInterfaces();
+        const addresses = [];
+        for (const name of Object.keys(networkInterfaces)) {
+            for (const net of networkInterfaces[name]) {
+                if (net.family === 'IPv4' && !net.internal) {
+                    addresses.push(net.address);
+                }
+            }
+        }
+        if (addresses.length > 0) {
+            console.log(`ネットワークからアクセス: http://${addresses[0]}:${PORT}`);
+        }
         console.log('Ctrl+C で終了します');
     });
 }
