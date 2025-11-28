@@ -403,23 +403,6 @@ input:checked+.toggle-label {
     width: 100%;
     border-collapse: collapse;
 }
-
-.history-table th,
-.history-table td {
-    padding: 0.75rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.history-table th {
-    background: var(--bg-color);
-    font-weight: 600;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-}
-
-.history-table tbody tr:hover {
-    background: var(--bg-color);
 }
 
 .status-badge {

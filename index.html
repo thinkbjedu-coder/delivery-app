@@ -42,6 +42,7 @@
             </div>
             <nav class="nav-tabs">
                 <button class="nav-tab active" data-view="create">送付状作成</button>
+                <button class="nav-tab" data-view="receive">受領確認</button>
                 <button class="nav-tab" data-view="history">履歴管理</button>
             </nav>
         </header>
@@ -100,6 +101,49 @@
             </section>
         </main>
 
+        <!-- Receive Confirmation View -->
+        <main class="app-main receive-view" style="display: none;">
+            <!-- Filters -->
+            <section class="filter-section">
+                <div class="filter-row">
+                    <div class="form-group">
+                        <label for="receive-filter-branch">事業所</label>
+                        <select id="receive-filter-branch">
+                            <option value="">全て</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="receive-filter-search">品名検索</label>
+                        <input type="text" id="receive-filter-search" placeholder="品名を入力">
+                    </div>
+                    <div class="form-group">
+                        <button id="apply-receive-filter-btn" class="btn btn-primary">検索</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Receive List Table -->
+            <section class="history-section">
+                <div class="history-table-container">
+                    <table class="history-table">
+                        <thead>
+                            <tr>
+                                <th>日付</th>
+                                <th>送付元</th>
+                                <th>送付先</th>
+                                <th>品目</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="receive-tbody"></tbody>
+                    </table>
+                    <div id="no-receive" class="no-data" style="display: none;">
+                        <p>受領待ちの記録がありません</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
         <!-- History View -->
         <main class="app-main history-view" style="display: none;">
             <!-- Filters -->
@@ -139,7 +183,7 @@
                                 <th>送付元</th>
                                 <th>送付先</th>
                                 <th>品目</th>
-                                <th>ステータス</th>
+                                <th>受領</th>
                                 <th>操作</th>
                             </tr>
                         </thead>
