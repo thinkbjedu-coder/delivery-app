@@ -3,9 +3,48 @@ const API_BASE = window.location.hostname === 'localhost' || window.location.hos
     ? `http://${window.location.hostname}:${window.location.port || 3000}/api`
     : `${window.location.origin}/api`;
 
+// パスワード設定
+const CORRECT_PASSWORD = 'think0305';
+const AUTH_TOKEN_KEY = 'delivery_app_auth';
+
 let currentReceiveId = null; // 受領確認中のID
 
 document.addEventListener('DOMContentLoaded', () => {
+    // 認証チェック
+    checkAuth();
+
+    // ログインフォーム
+    const loginForm = document.getElementById('login-form');
+    const passwordInput = document.getElementById('password');
+    const loginError = document.getElementById('login-error');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const password = passwordInput.value;
+
+        if (password === CORRECT_PASSWORD) {
+            // 認証成功
+            sessionStorage.setItem(AUTH_TOKEN_KEY, 'authenticated');
+            showApp();
+            passwordInput.value = '';
+            loginError.style.display = 'none';
+        } else {
+            // 認証失敗
+            loginError.textContent = 'パスワードが正しくありません';
+            loginError.style.display = 'block';
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    });
+
+    logoutBtn.addEventListener('click', () => {
+        if (confirm('ログアウトしますか?')) {
+            sessionStorage.removeItem(AUTH_TOKEN_KEY);
+            hideApp();
+        }
+    });
+
     // Elements
     const navTabs = document.querySelectorAll('.nav-tab');
     const createView = document.querySelector('.create-view');
@@ -41,13 +80,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const printItemsBody = document.getElementById('print-items-body');
 
     // Initialize
-    init();
-
     function init() {
         loadBranches();
         updateDate();
         addItemRow();
         setupEventListeners();
+    }
+
+    // 認証チェック
+    function checkAuth() {
+        const isAuthenticated = sessionStorage.getItem(AUTH_TOKEN_KEY) === 'authenticated';
+        if (isAuthenticated) {
+            showApp();
+        } else {
+            hideApp();
+        }
+    }
+
+    // アプリケーションを表示
+    function showApp() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('app-container').style.display = 'block';
+        init();
+    }
+
+    // アプリケーションを非表示
+    function hideApp() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('app-container').style.display = 'none';
     }
 
     // Event Listeners
